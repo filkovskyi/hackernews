@@ -78,7 +78,9 @@ class App extends Component {
                 <Search
                     value={searchTerm}
                     onChange={this.onSearchChange}
-                />
+                >
+                    <span>Search input -></span>
+                </Search>
 
                 <Table
                     list={list}
