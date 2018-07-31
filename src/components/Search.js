@@ -1,21 +1,17 @@
-import React, {Component} from 'react';
+import React  from 'react';
 
-class Search extends Component {
-    render() {
-        const {value, onChange} = this.props;
+const Search = ({ value, onChange, children }) => {
+    return (
 
-        return (
-            <div className="form-wrapper">
-                <form>
-                    <input
-                        type="text"
-                        value={value}
-                        onChange={onChange}
-                    />
-                </form>
-            </div>
-        );
-    }
-}
+        <form>
+            {children}
+            <input
+                type="text"
+                value={value}
+                onChange={onChange}
+            />
+        </form>
+    );
+};
 
 export default Search;
