@@ -20,6 +20,8 @@ class App extends Component {
         this.setSearchTopStories = this.setSearchTopStories.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
+        this.onSearchSubmit = this.onSearchSubmit.bind(this);
+        this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
     };
 
     setSearchTopStories(result) {
@@ -38,22 +40,28 @@ class App extends Component {
         this.setState({searchTerm: event.target.value});
     };
 
-    componentDidMount() {
-        const {searchTerm} = this.state;
+    onSearchSubmit(event) {
+        const { searchTerm } = this.state;
+        this.fetchSearchTopStories(searchTerm);
+        event.preventDefault();
+    };
+
+    fetchSearchTopStories(searchTerm) {
         const url = `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`;
 
         fetch(url)
             .then(response => response.json())
             .then(result => this.setSearchTopStories(result))
             .catch(error => error);
+    };
+
+    componentDidMount() {
+        const {searchTerm} = this.state;
+        this.fetchSearchTopStories(searchTerm);
     }
 
     render() {
         const {result, searchTerm} = this.state;
-
-        if (!result) {
-            return null;
-        }
 
         return (
             <div className="page">
@@ -61,15 +69,19 @@ class App extends Component {
                     <Search
                         value={searchTerm}
                         onChange={this.onSearchChange}
+                        onSubmit={this.onSearchSubmit}
                     >
                         <span>Search: </span>
                     </Search>
                 </div>
-                <Table
-                    result={result.hits}
-                    pattern={searchTerm}
-                    onDismiss={this.onDismiss}
-                />
+                {
+                    result
+                        ? <Table
+                        result={result.hits}
+                        onDismiss={this.onDismiss}
+                        />
+                        : null
+                }
             </div>
         );
     }
