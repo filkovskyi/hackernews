@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import axios from 'axios';
 import Search from './components/Search';
 import Table  from './components/Table';
 import Button from './components/Button';
@@ -21,7 +22,8 @@ class App extends Component {
         this.state = {
             results: null,
             searchKey: '',
-            searchTerm: DEFAULT_QUERY
+            searchTerm: DEFAULT_QUERY,
+            error: null
         };
 
         this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -86,11 +88,10 @@ class App extends Component {
 
     fetchSearchTopStories(searchTerm, page = 0) {
         const url = `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`;
-        
-        fetch(url)
-            .then(response => response.json())
-            .then(results => this.setSearchTopStories(results))
-            .catch(error => error);
+
+        axios(url)
+            .then(result => this.setSearchTopStories(result.data))
+            .catch(error => this.setState({error}));
     };
 
     componentDidMount() {
@@ -104,6 +105,7 @@ class App extends Component {
             results,
             searchTerm,
             searchKey,
+            error
         } = this.state;
 
         const page = (
@@ -117,6 +119,10 @@ class App extends Component {
             results[searchKey] &&
             results[searchKey].hits
         ) || [];
+
+        if (error) {
+            return alert(error);
+        }
 
         return (
             <div className="page">
