@@ -7,10 +7,10 @@ function isSearched(pattern) {
     }
 }
 
-const Table = ({result, onDismiss}) => {
+const Table = ({list, onDismiss}) => {
     return (
         <div className="table">
-            {result.map(item =>
+            {list.map(item =>
                 <div key={item.objectID} className="table-row">
                     <span style={{ width: '40%' }}>
                         <a href={item.url}>{item.title}</a>
