@@ -1,19 +1,21 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import Search from './components/Search';
-import Table  from './components/Table';
-import Button from './components/Button';
+
+import Search from './components/search';
+import Table  from './components/table';
+import Button from './components/button';
+
+import  {
+    PATH_BASE,
+    PATH_SEARCH,
+    PARAM_SEARCH,
+    PARAM_PAGE,
+    PARAM_HPP,
+    DEFAULT_HPP,
+    DEFAULT_QUERY
+} from './constants'
 
 import './App.css';
-
-const PATH_BASE = 'https://hn.algolia.com/api/v1';
-const PATH_SEARCH = '/search';
-const PARAM_SEARCH = 'query=';
-const PARAM_PAGE = 'page=';
-const PARAM_HPP = 'hitsPerPage=';
-
-const DEFAULT_HPP = '5';
-const DEFAULT_QUERY = 'redux';
 
 class App extends Component {
     constructor(props) {

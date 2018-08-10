@@ -1,11 +1,5 @@
 import React from 'react';
-import Button  from './Button';
-
-function isSearched(pattern) {
-    return function (item) {
-        return item.title.toLocaleLowerCase().includes(pattern.toLowerCase());
-    }
-}
+import Button  from '../button';
 
 const Table = ({list, onDismiss}) => {
     return (
