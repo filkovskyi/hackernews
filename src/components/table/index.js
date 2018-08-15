@@ -1,11 +1,6 @@
 import React from 'react';
-import Button  from './Button';
-
-function isSearched(pattern) {
-    return function (item) {
-        return item.title.toLocaleLowerCase().includes(pattern.toLowerCase());
-    }
-}
+import Button  from '../button';
+import PropTypes from 'prop-types';
 
 const Table = ({list, onDismiss}) => {
     return (
@@ -25,6 +20,19 @@ const Table = ({list, onDismiss}) => {
             )}
         </div>
     );
+};
+
+Table.propTypes = {
+    list: PropTypes.arrayOf(
+        PropTypes.shape({
+            objectID: PropTypes.string,
+            author: PropTypes.string,
+            url: PropTypes.string,
+            num_comments: PropTypes.number,
+            points: PropTypes.number
+        })
+    ),
+    onDismiss: PropTypes.func
 };
 
 export default Table;
