@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import {sortBy} from 'lodash';
 
 import Search from './components/search';
 import Table  from './components/table';
 import Button from './components/button';
 import WithLoading from './components/HOC/withLoading';
+
+import './App.css';
 
 import  {
     PATH_BASE,
@@ -16,7 +19,13 @@ import  {
     DEFAULT_QUERY
 } from './constants'
 
-import './App.css';
+const SORTS = {
+    NONE: list => list,
+    TITLE: list => sortBy(list, 'title'),
+    AUTHOR: list => sortBy(list, 'author'),
+    COMMENTS: list => sortBy(list, 'num_comments').reverse(),
+    POINTS: list => sortBy(list, 'points').reverse()
+};
 
 const ButtonWithLoading = WithLoading(Button);
 const TableWithLoading = WithLoading(Table);
@@ -30,7 +39,8 @@ class App extends Component {
             searchKey: '',
             searchTerm: DEFAULT_QUERY,
             error: null,
-            isLoading: false
+            isLoading: false,
+            sortKey: 'NONE'
         };
 
         this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -39,6 +49,7 @@ class App extends Component {
         this.onSearchChange = this.onSearchChange.bind(this);
         this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
+        this.onSort = this.onSort.bind(this);
     };
 
     setSearchTopStories(result) {
@@ -108,6 +119,10 @@ class App extends Component {
         const {searchTerm} = this.state;
         this.setState({searchKey: searchTerm});
         this.fetchSearchTopStories(searchTerm);
+    };
+
+    onSort(sortKey) {
+        this.setState({sortKey});
     }
 
     render() {
@@ -116,7 +131,8 @@ class App extends Component {
             searchTerm,
             searchKey,
             error,
-            isLoading
+            isLoading,
+            sortKey,
         } = this.state;
 
         const page = (
@@ -146,9 +162,11 @@ class App extends Component {
                         <span>Search</span>
                     </Search>
                 </div>
-                <TableWithLoading list={list} onDismiss={this.onDismiss}/>
+                <TableWithLoading list={list} onDismiss={this.onDismiss} sortKey={sortKey} onSort={this.onSort}/>
                 <div className="interactions">
-                    <ButtonWithLoading  isLoading={isLoading} onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme More</ButtonWithLoading>
+                    <ButtonWithLoading isLoading={isLoading}
+                                       onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme
+                        More</ButtonWithLoading>
                 </div>
             </div>
         );
