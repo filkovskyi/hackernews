@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-
 import Search from './components/search';
 import Table  from './components/table';
 import Button from './components/button';
+import WithLoading from './components/HOC/withLoading';
 
 import  {
     PATH_BASE,
@@ -18,14 +18,8 @@ import  {
 
 import './App.css';
 
-const Loading = () => <div><i class="fas fa-spinner"></i> Loading ...</div>;
-
-const withLoading = (Component) => ({ isLoading, ...rest }) =>
-    isLoading
-    ? <Loading/>
-    : <Component {...rest}/>;
-
-const ButtonWithLoading = withLoading(Button);
+const ButtonWithLoading = WithLoading(Button);
+const TableWithLoading = WithLoading(Table);
 
 class App extends Component {
     constructor(props) {
@@ -152,14 +146,7 @@ class App extends Component {
                         <span>Search</span>
                     </Search>
                 </div>
-                {
-                    results
-                        ? <Table
-                        list={list}
-                        onDismiss={this.onDismiss}
-                    />
-                        : null
-                }
+                <TableWithLoading list={list} onDismiss={this.onDismiss}/>
                 <div className="interactions">
                     <ButtonWithLoading  isLoading={isLoading} onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme More</ButtonWithLoading>
                 </div>
