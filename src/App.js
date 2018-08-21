@@ -20,6 +20,13 @@ import './App.css';
 
 const Loading = () => <div><i class="fas fa-spinner"></i> Loading ...</div>;
 
+const withLoading = (Component) => ({ isLoading, ...rest }) =>
+    isLoading
+    ? <Loading/>
+    : <Component {...rest}/>;
+
+const ButtonWithLoading = withLoading(Button);
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -154,11 +161,7 @@ class App extends Component {
                         : null
                 }
                 <div className="interactions">
-                    {
-                        isLoading
-                        ? <Loading/>
-                        : <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme More</Button>
-                    }
+                    <ButtonWithLoading  isLoading={isLoading} onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme More</ButtonWithLoading>
                 </div>
             </div>
         );
@@ -168,7 +171,7 @@ class App extends Component {
 export default App;
 
 export {
-    Button,
+    ButtonWithLoading,
     Search,
     Table
 };
