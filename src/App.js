@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {sortBy} from 'lodash';
+
 
 import Search from './components/search';
 import Table  from './components/table';
@@ -19,14 +19,6 @@ import  {
     DEFAULT_QUERY
 } from './constants'
 
-const SORTS = {
-    NONE: list => list,
-    TITLE: list => sortBy(list, 'title'),
-    AUTHOR: list => sortBy(list, 'author'),
-    COMMENTS: list => sortBy(list, 'num_comments').reverse(),
-    POINTS: list => sortBy(list, 'points').reverse()
-};
-
 const ButtonWithLoading = WithLoading(Button);
 const TableWithLoading = WithLoading(Table);
 
@@ -41,6 +33,7 @@ class App extends Component {
             error: null,
             isLoading: false,
             sortKey: 'NONE',
+            isSortReverse: false
         };
 
         this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -122,7 +115,8 @@ class App extends Component {
     };
 
     onSort(sortKey) {
-        this.setState({sortKey});
+        const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
+        this.setState({sortKey, isSortReverse});
     }
 
     render() {
@@ -133,6 +127,7 @@ class App extends Component {
             error,
             isLoading,
             sortKey,
+            isSortReverse
         } = this.state;
 
         const page = (
@@ -162,7 +157,7 @@ class App extends Component {
                         <span>Search</span>
                     </Search>
                 </div>
-                <TableWithLoading list={list} onDismiss={this.onDismiss} sortKey={sortKey} onSort={this.onSort}/>
+                <TableWithLoading list={list} onDismiss={this.onDismiss} sortKey={sortKey} onSort={this.onSort} isSortReverse={isSortReverse}/>
                 <div className="interactions">
                     <ButtonWithLoading isLoading={isLoading}
                                        onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme

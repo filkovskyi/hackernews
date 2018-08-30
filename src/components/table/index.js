@@ -12,8 +12,12 @@ const SORTS = {
     POINTS: list => sortBy(list, 'points').reverse()
 };
 
-const Table = ({list, onDismiss, sortKey, onSort}) => {
+const Table = ({list, onDismiss, sortKey, onSort, isSortReverse}) => {
     const sortedList = SORTS[sortKey](list);
+    const reverseSortedList = isSortReverse
+        ? sortedList.reverse()
+        : sortedList;
+
     return (
         <div className="table">
             <div className="table-header">
@@ -21,6 +25,8 @@ const Table = ({list, onDismiss, sortKey, onSort}) => {
                     <Sort
                         sortKey={'TITLE'}
                         onSort={onSort}
+                        activeSortKey={sortKey}
+                        isSortReverse={isSortReverse}
                     >
                         Title
                     </Sort>
@@ -29,6 +35,8 @@ const Table = ({list, onDismiss, sortKey, onSort}) => {
                     <Sort
                         sortKey={'AUTHOR'}
                         onSort={onSort}
+                        activeSortKey={sortKey}
+                        isSortReverse={isSortReverse}
                     >
                         Author
                     </Sort>
@@ -37,20 +45,24 @@ const Table = ({list, onDismiss, sortKey, onSort}) => {
                     <Sort
                         sortKey={'COMMENTS'}
                         onSort={onSort}
+                        activeSortKey={sortKey}
+                        isSortReverse={isSortReverse}
                     >
                         Comments
                     </Sort>
                 </span>
-                <span style={{ width: '10%' }}>
+                <span style={{ width: '10%', padding: '0 130px 0 0'}}>
                     <Sort
                         sortKey={'POINTS'}
                         onSort={onSort}
+                        activeSortKey={sortKey}
+                        isSortReverse={isSortReverse}
                     >
                         Points
                     </Sort>
                 </span>
             </div>
-            {sortedList.map(item =>
+            {reverseSortedList.map(item =>
                 <div key={item.objectID} className="table-row">
                     <span style={{ width: '40%' }}><a href={item.url}>{item.title}</a></span>
                     <span style={{ width: '30%' }}>{item.author}</span>
