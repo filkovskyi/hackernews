@@ -61,3 +61,13 @@
     border-radius: 0;
     border-bottom: 1px solid #38BB6C;
 }
+
+.down:before {
+    content: '↓';
+    font-size: 16px;
+}
+
+.up:before {
+    content: '↑';
+    font-size: 16px;
+}

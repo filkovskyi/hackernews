@@ -5,6 +5,9 @@ import axios from 'axios';
 import Search from './components/search';
 import Table  from './components/table';
 import Button from './components/button';
+import WithLoading from './components/HOC/withLoading';
+
+import './App.css';
 
 import  {
     PATH_BASE,
@@ -16,7 +19,8 @@ import  {
     DEFAULT_QUERY
 } from './constants'
 
-import './App.css';
+const ButtonWithLoading = WithLoading(Button);
+const TableWithLoading = WithLoading(Table);
 
 class App extends Component {
     constructor(props) {
@@ -26,7 +30,10 @@ class App extends Component {
             results: null,
             searchKey: '',
             searchTerm: DEFAULT_QUERY,
-            error: null
+            error: null,
+            isLoading: false,
+            sortKey: 'NONE',
+            isSortReverse: false
         };
 
         this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -35,6 +42,7 @@ class App extends Component {
         this.onSearchChange = this.onSearchChange.bind(this);
         this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
+        this.onSort = this.onSort.bind(this);
     };
 
     setSearchTopStories(result) {
@@ -51,7 +59,8 @@ class App extends Component {
             results: {
                 ...results,
                 [searchKey]: {hits: updateHits, page}
-            }
+            },
+            isLoading: false
         })
     };
 
@@ -92,6 +101,7 @@ class App extends Component {
 
     fetchSearchTopStories(searchTerm, page = 0) {
         const url = `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`;
+        this.setState({isLoading: true});
 
         axios(url)
             .then(result => this.setSearchTopStories(result.data))
@@ -102,6 +112,11 @@ class App extends Component {
         const {searchTerm} = this.state;
         this.setState({searchKey: searchTerm});
         this.fetchSearchTopStories(searchTerm);
+    };
+
+    onSort(sortKey) {
+        const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
+        this.setState({sortKey, isSortReverse});
     }
 
     render() {
@@ -109,7 +124,10 @@ class App extends Component {
             results,
             searchTerm,
             searchKey,
-            error
+            error,
+            isLoading,
+            sortKey,
+            isSortReverse
         } = this.state;
 
         const page = (
@@ -139,16 +157,11 @@ class App extends Component {
                         <span>Search</span>
                     </Search>
                 </div>
-                {
-                    results
-                        ? <Table
-                        list={list}
-                        onDismiss={this.onDismiss}
-                    />
-                        : null
-                }
+                <TableWithLoading list={list} onDismiss={this.onDismiss} sortKey={sortKey} onSort={this.onSort} isSortReverse={isSortReverse}/>
                 <div className="interactions">
-                    <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme More</Button>
+                    <ButtonWithLoading isLoading={isLoading}
+                                       onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme
+                        More</ButtonWithLoading>
                 </div>
             </div>
         );
@@ -158,7 +171,7 @@ class App extends Component {
 export default App;
 
 export {
-    Button,
+    ButtonWithLoading,
     Search,
     Table
 };
