@@ -1,8 +1,16 @@
 import React from 'react';
 import Button  from '../button';
 import PropTypes from 'prop-types';
+import {sortBy} from 'lodash';
 import Sort from '../sort';
-import SORTS from '../../App';
+
+const SORTS = {
+    NONE: list => list,
+    TITLE: list => sortBy(list, 'title'),
+    AUTHOR: list => sortBy(list, 'author'),
+    COMMENTS: list => sortBy(list, 'num_comments').reverse(),
+    POINTS: list => sortBy(list, 'points').reverse()
+};
 
 const Table = ({list, onDismiss, sortKey, onSort}) => {
     const sortedList = SORTS[sortKey](list);

@@ -40,7 +40,7 @@ class App extends Component {
             searchTerm: DEFAULT_QUERY,
             error: null,
             isLoading: false,
-            sortKey: 'NONE'
+            sortKey: 'NONE',
         };
 
         this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
