@@ -31,9 +31,7 @@ class App extends Component {
             searchKey: '',
             searchTerm: DEFAULT_QUERY,
             error: null,
-            isLoading: false,
-            sortKey: 'NONE',
-            isSortReverse: false
+            isLoading: false
         };
 
         this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -42,7 +40,6 @@ class App extends Component {
         this.onSearchChange = this.onSearchChange.bind(this);
         this.onSearchSubmit = this.onSearchSubmit.bind(this);
         this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
-        this.onSort = this.onSort.bind(this);
     };
 
     setSearchTopStories(result) {
@@ -113,21 +110,14 @@ class App extends Component {
         this.setState({searchKey: searchTerm});
         this.fetchSearchTopStories(searchTerm);
     };
-
-    onSort(sortKey) {
-        const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
-        this.setState({sortKey, isSortReverse});
-    }
-
+    
     render() {
         const {
             results,
             searchTerm,
             searchKey,
             error,
-            isLoading,
-            sortKey,
-            isSortReverse
+            isLoading
         } = this.state;
 
         const page = (
@@ -157,7 +147,7 @@ class App extends Component {
                         <span>Search</span>
                     </Search>
                 </div>
-                <TableWithLoading list={list} onDismiss={this.onDismiss} sortKey={sortKey} onSort={this.onSort} isSortReverse={isSortReverse}/>
+                <TableWithLoading list={list} onDismiss={this.onDismiss}/>
                 <div className="interactions">
                     <ButtonWithLoading isLoading={isLoading}
                                        onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}>Gimme
